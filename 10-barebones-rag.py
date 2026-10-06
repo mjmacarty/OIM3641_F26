@@ -10,6 +10,7 @@ load_dotenv()
 Settings.llm = GoogleGenAI(model="gemini-2.5-flash")
 Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
 
+@st.cache_resource
 def get_query_engine():
     documents = SimpleDirectoryReader("data/handbook").load_data()
     index = VectorStoreIndex.from_documents(documents)
@@ -22,7 +23,8 @@ if prompt:
     st.write(f"User: {prompt}")
     response = query_engine.query(prompt)
     bot_response = response.response
-    st.write(f"Bot response: {bot_response}")
+    with st.chat_message("assistant"):
+        st.write(f"Bot response: {bot_response}")
 
 
 
